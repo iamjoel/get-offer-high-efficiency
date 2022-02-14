@@ -15,9 +15,9 @@ while (left >= right) {
 
 该算法存在一个问题。当被除数很大但除数很小时，减法操作执行的次数会很多。
 
-完整代码：https://stackblitz.com/edit/js-kgqgto?file=src/number/01-divide/1-basic.js
+完整代码：https://stackblitz.com/edit/get-offer-high-efficiency?file=src/number/01-divide/1-basic.js
 
-算法2:  除数2倍法
+### 算法2:  除数2倍法
 探测除数是否大于除数的2倍。如果是，则继续判断被除数是否大于除数的4倍、8倍...2n倍，直到被除数大于被除数。此时，将被除数减去除数的2n倍，余数重复前面的步骤。JavaScript 的实现如下：
 ```js
 let times = 0;
@@ -45,7 +45,7 @@ function getMaxTimes(left, right) {
 }
 ```
 
-完整代码：https://stackblitz.com/edit/js-kgqgto?file=src/number/01-divide/2-effective.js
+完整代码：https://stackblitz.com/edit/get-offer-high-efficiency?file=src/number/01-divide/2-effective.js
 
 ### 算法3: 位数估算法
 1. 将被除数和除数转化成字符串。用字符串长度的差值来决定大体的倍数。比如 `600 / 5`，则倍数是100。 
