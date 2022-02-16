@@ -32,7 +32,7 @@ const maxProduct = function (words) {
   return max;
 };
 
-maxProduct(['abc', 'aa', 'ef'])
+maxProduct(['abc', 'aa', 'ef']);
 
 function uniq(word) {
   const res = [];
