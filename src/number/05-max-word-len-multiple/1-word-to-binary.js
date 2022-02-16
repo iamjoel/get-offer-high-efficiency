@@ -1,8 +1,8 @@
 /**
  * 1. 用一位是1其他位数是0的二进制来表示一个不同的字母。比如 a 是 1, b 是 10, c 是 100。
- * 2. 去掉单词内相同的字符。
- * 2. 将单词包含的字母表示的二进制数求和。
- * 3. 单词之间做 & 操作，结果为0，则表示没有相同的字母。
+ * 2. 去掉单词内相同的字母。
+ * 3. 将单词包含的字母表示的二进制数求和。
+ * 4. 单词之间做 & 操作，结果为0，则表示没有相同的字母。
  */
 const maxProduct = function (words) {
   const lettersArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
@@ -31,8 +31,6 @@ const maxProduct = function (words) {
   }
   return max;
 };
-
-maxProduct(['abc', 'aa', 'ef']);
 
 function uniq(word) {
   const res = [];
