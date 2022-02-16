@@ -6,21 +6,21 @@
  */
 const maxProduct = function (words) {
   const lettersArr = 'abcdefghijklmnopqrstuvwxyz'.split('');
-  const lettersVaule = {};
+  const lettersValue = {};
   for (let i = 0; i < 26; i++) {
-    lettersVaule[lettersArr[i]] = 1 << i;
+    lettersValue[lettersArr[i]] = 1 << i;
   }
 
   // 单词内的字母去重
   const uniqCharWords = words.map((word) => uniq(word));
   const wordsSum = uniqCharWords.map((word) => {
-    return getSum(word, lettersVaule);
+    return getSum(word, lettersValue);
   });
 
   let max = 0;
   for (i = 0; i < words.length; i++) {
     for (let j = i + 1; j < words.length; j++) {
-      if (wordsSum[i] & (wordsSum[j] === 0)) {
+      if ((wordsSum[i] & wordsSum[j]) === 0) {
         // 两个单词没有相同的字符
         const value = words[i].length * words[j].length;
         if (value > max) {
@@ -31,6 +31,8 @@ const maxProduct = function (words) {
   }
   return max;
 };
+
+maxProduct(['abc', 'aa', 'ef'])
 
 function uniq(word) {
   const res = [];
@@ -45,6 +47,6 @@ function uniq(word) {
   return res.join('');
 }
 
-function getSum(word, lettersVaule) {
-  return word.split('').reduce((prev, curr) => prev + lettersVaule[curr], 0);
+function getSum(word, lettersValue) {
+  return word.split('').reduce((prev, curr) => prev + lettersValue[curr], 0);
 }
