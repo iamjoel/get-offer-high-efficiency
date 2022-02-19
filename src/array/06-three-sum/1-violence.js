@@ -58,7 +58,6 @@ function uniq(arr) {
   });
 
   const exist = {};
-  const uniqIndexArr = [];
   sortedArrStr.forEach((item, index) => {
     if (!exist[item]) {
       exist[item] = true;
