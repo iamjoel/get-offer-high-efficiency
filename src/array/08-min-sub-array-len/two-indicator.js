@@ -1,26 +1,19 @@
 /**
- * 双指针去实现，从第一个开始，一个个的加或简。
+ * 双指针去实现，固定尾部，往前去找。
  */
 const minSubArrayLen = function (target, nums) {
-  nums.sort((a, b) => a - b);
-  if (nums[0] >= target) {
-    return 1;
-  }
-
   let startIndex = 0;
-  let endIndex = 0;
-  let sum = nums[0];
+  let sum = 0;
+  let count = Number.MAX_VALUE;
 
-  while (startIndex <= endIndex && endIndex < nums.length - 1) {
-    if (sum < target) {
-      endIndex++;
-      sum += nums[endIndex];
-    } else {
+  for (let endIndex = 0; endIndex < nums.length; endIndex++) {
+    sum += nums[endIndex];
+    while (sum >= target && startIndex <= endIndex) {
+      count = Math.min(count, endIndex - startIndex + 1);
       sum -= nums[startIndex];
-      startIndex--;
+      startIndex++; // 尝试少一个数字
     }
   }
 
-  const count = endIndex - startIndex + 1;
-  return sum < target ? 0 : count;
+  return count === Number.MAX_VALUE ? 0 : count;
 };
