@@ -17,8 +17,10 @@ const threeSum = function (nums) {
     }
     prevNum = currNum;
     const target = 0 - currNum;
-    const twoSumRes = twoSum(filteredNums.slice(i), target);
-    res.push(...[twoSumRes.map((item) => [currNum, ...item])]);
+    const twoSumRes = twoSum(filteredNums.slice(i + 1), target);
+    if (twoSumRes.length > 0) {
+      res.push(...twoSumRes.map((item) => [currNum, ...item]));
+    }
   }
   return uniq(res);
 };
@@ -31,11 +33,11 @@ function twoSum(numbers, target) {
   let leftIndex = 0;
   let rightIndex = numbers.length - 1;
 
-  for (let i = 0; i < numbers.length; i++) {
+  for (let i = 0; i < numbers.length - 1; i++) {
     let left = numbers[leftIndex];
     let right = numbers[rightIndex];
     if (left + right === target) {
-      res.push([leftIndex, rightIndex]);
+      res.push([left, right]);
       leftIndex++;
       continue;
     }
