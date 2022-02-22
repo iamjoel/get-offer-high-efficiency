@@ -1,6 +1,16 @@
 /**
- * n 个和为 k的个数。可以转化为前 n-1 中, 和为 k - nums[n] 的个数。
+ * 数组的前i个数字之和记为x。如果存在一个j（j＜i），数组的前j个数字之和为sum-k，那么数组中从第i+1个数字开始到第j个数字结束的子数组之和为k。 k = sum - (sum - k)
  */
-const subarraySum = function(nums, k) {
+const subarraySum = function (nums, k) {
+  let count = 0;
+  let sum = 0;
+  const sumCach = { 0: 1 }; // 和是0的值，初始化有一个。
 
+  nums.forEach((num) => {
+    sum += num;
+    count += sumCach[sum - k] || 0;
+    sumCach[sum] = (sumCach[sum] || 0) + 1;
+  });
+
+  return count;
 };
