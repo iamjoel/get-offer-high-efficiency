@@ -4,12 +4,15 @@
 const findMaxLength = function (nums) {
   let count = 0;
   let sum = 0;
-  const sumCach = { 0: 1 }; // 和是0的值，初始化有一个。
+  const sumIndexCache = { 0: -1 }; // key 是 和， value 是下标
 
-  nums.forEach((num) => {
+  nums.forEach((num, i) => {
     sum += num === 0 ? -1 : 1;
-    count = Math.max(count, sumCach[sum] || 0);
-    sumCach[sum] = (sumCach[sum] || 0) + 1;
+    if (sumIndexCache[sum] !== undefined) {
+      count = Math.max(count, i - sumIndexCache[sum]);
+    } else {
+      sumIndexCache[sum] = i;
+    }
   });
 
   return count;
