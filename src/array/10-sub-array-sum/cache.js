@@ -4,12 +4,12 @@
 const subarraySum = function (nums, k) {
   let count = 0;
   let sum = 0;
-  const sumCach = { 0: 1 }; // 和是0的值，初始化有一个。
+  const sumCache = { 0: 1 }; // 和是0的值，初始化有一个。
 
   nums.forEach((num) => {
     sum += num;
-    count += sumCach[sum - k] || 0;
-    sumCach[sum] = (sumCach[sum] || 0) + 1;
+    count += sumCache[sum - k] || 0;
+    sumCache[sum] = (sumCache[sum] || 0) + 1;
   });
 
   return count;
