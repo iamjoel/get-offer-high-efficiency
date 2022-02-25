@@ -98,7 +98,7 @@
         let isFind = false
 
 
-        while (leftIndex < rightIndex) {
+        while (leftIndex < rightIndex || !isFind) {
           let left = numbers[leftIndex];
           let right = numbers[rightIndex];
           processList.push({leftIndex, rightIndex})
@@ -123,9 +123,11 @@
       queue.setTaskList(taskList)
       
       draw(numbers, {leftIndex, rightIndex}, numbers[leftIndex] + numbers[rightIndex], target)
-      setTimeout(() => {
-        queue.start()
-      }, 10000)
+      queue.start()
+
+      // setTimeout(() => {
+      //   queue.start()
+      // }, 10000)
     };
 
     function draw(numbers, loc, currValue, targetValue) {
