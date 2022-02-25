@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>example</title>
+  <style>
+    #list {
+      display: flex;
+      position: relative;
+    }
+
+    .wrap {
+      display: inline-block;
+      padding: 10px;
+      background-color: #eee;
+    }
+
+    .item {
+      display: flex;
+      height: 50px;
+      width: 50px;
+      line-height: 50px;
+      outline: 1px solid #ddd;
+      /* border-left: 0; */
+      background-color: blue;
+      color: #fff;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .item-curr {
+      background-color: #f00;
+    }
+
+    .item-find {
+      background-color: #0f0;
+    }
+
+  </style>
+</head>
+<body>
+  <div id="app">
+    <div class="wrap">
+      <div>目标： 8。当前： <span id="curr"></span></div>
+      <div id="list"></div>
+    </div>
+    
+    <div style="margin-top: 100px;">截图倒计时<div id="time">10</div></div>
+    
+  </div>
+  <script src="../queue.js"></script>
+  <script>
+    // const twoSum = function (numbers, target) {
+    //   const processList = []
+    //   let leftIndex = 0;
+    //   let rightIndex = numbers.length - 1;
+    //   let isFind = false
+    //   for (let i = 0; i < numbers.length && !isFind; i++) {
+    //     let left = numbers[leftIndex];
+    //     let right = numbers[rightIndex];
+    //     processList.push({leftIndex, rightIndex})
+    //     if (left + right === target) {
+    //       isFind = true
+    //       // return [leftIndex, rightIndex];
+    //     }
+    //     if (left + right > target) {
+    //       rightIndex--;
+    //     } else {
+    //       leftIndex++;
+    //     }
+    //   }
+
+    //   const queue = new Queue()
+    //   const taskList = processList.map((item, index) => {
+    //     return () => {
+    //       draw(numbers, item, numbers[item.leftIndex] + numbers[item.rightIndex], target)
+    //     }
+    //   })
+    //   queue.setTaskList(taskList)
+      
+    //   draw(numbers, {leftIndex, rightIndex}, numbers[leftIndex] + numbers[rightIndex], target)
+    //   setTimeout(() => {
+    //     queue.start()
+    //   }, 10000)
+    // };
+
+    /**
+     * 求和用二分法来实现
+     * 会超出时间限制
+     */
+    const twoSum = function (numbers, target) {
+      for (let leftIndex = 0; leftIndex < numbers.length; leftIndex++) {
+        let rightIndex = numbers.length - 1;
+
+        const processList = []
+        let isFind = false
+
+
+        while (leftIndex < rightIndex) {
+          let left = numbers[leftIndex];
+          let right = numbers[rightIndex];
+          processList.push({leftIndex, rightIndex})
+          if (left + right === target) {
+            isFind = true
+            // return [leftIndex, rightIndex];
+          }
+          if (left + right > target) {
+            rightIndex = Math.ceil((leftIndex + rightIndex) / 2);
+          } else {
+            break;
+          }
+        }
+      }
+
+      const queue = new Queue()
+      const taskList = processList.map((item, index) => {
+        return () => {
+          draw(numbers, item, numbers[item.leftIndex] + numbers[item.rightIndex], target)
+        }
+      })
+      queue.setTaskList(taskList)
+      
+      draw(numbers, {leftIndex, rightIndex}, numbers[leftIndex] + numbers[rightIndex], target)
+      setTimeout(() => {
+        queue.start()
+      }, 10000)
+    };
+
+    function draw(numbers, loc, currValue, targetValue) {
+      const html = `
+        ${numbers.map((item, index) => {
+          return (
+            `<div class="item ${(loc.leftIndex === index || loc.rightIndex === index) && (currValue === targetValue ? 'item-find' : 'item-curr')}">${item}</div>`
+          )
+        }).join('')}
+      `
+      document.getElementById('curr').innerText = currValue
+      document.getElementById('list').innerHTML = html
+    }
+
+    twoSum([1,2,4,6,10], 8)
+
+    let down = 10
+    let runId = setInterval(() => {
+      down--;
+      if(down === 0) {
+        clearInterval(runId)
+      }
+      document.getElementById('time').innerText = down
+    }, 1000)
+
+
+  </script>
+</body>
+</html>
