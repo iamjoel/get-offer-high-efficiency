@@ -16,7 +16,7 @@ const findAnagrams = function (s2, s1) {
   let start = 1;
   let end = start + s1.length - 1;
   for (; end < s2.length; start++, end++) {
-    count[s2[start]] = (count[s2[start]] || 0) + 1; // 出
+    count[s2[start - 1]] = (count[s2[start - 1]] || 0) + 1; // 出
     count[s2[end]] = (count[s2[end]] || 0) - 1; // 入
     if (isAllZero(count)) {
       res.push(start);
@@ -28,5 +28,3 @@ const findAnagrams = function (s2, s1) {
 function isAllZero(count) {
   return Object.values(count).every((c) => c === 0);
 }
-
-findAnagrams('cbaebabacd', 'abc'); // [0, 6]
