@@ -1,7 +1,7 @@
 /**
  * 两边向中间遍历
  */
- const isPalindrome = function (s) {
+const isPalindrome = function (s) {
   const letterNumberStr = s
     .split('')
     .filter((c) => /[0-9a-zA-Z]/.test(c))
