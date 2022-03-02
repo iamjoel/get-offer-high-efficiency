@@ -1,10 +1,10 @@
 /**
  * 两边向中间遍历
  */
-const isPalindrome = function (s) {
+ const isPalindrome = function (s) {
   const letterNumberStr = s
     .split('')
-    .filter((c) => /0-9a-zA-Z/.test(c))
+    .filter((c) => /[0-9a-zA-Z]/.test(c))
     .join('');
   const formatedStr = letterNumberStr.toLowerCase();
 
