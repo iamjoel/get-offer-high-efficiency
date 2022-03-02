@@ -1,4 +1,3 @@
-// 注意： 对于 t 中重复字符，我们寻找的子字符串中该字符数量必须不少于 t 中该字符数量
 const minWindow = function (s, t) {
   if (s.length === 0 || t.length === 0) {
     return '';
@@ -12,9 +11,14 @@ const minWindow = function (s, t) {
   let start = 0;
   let end = 0;
 
+  for (let i = 0; i < t.length; i++) {
+    count[t[i]] = (count[t[i]] || 0) + 1;
+  }
+
   for (; end < s.length; ) {
     count[s[end]] = (count[s[end]] || 0) - 1;
-    if (isInclude(count, uniqT)) {
+
+    while (isInclude(count, uniqT) && start <= end) {
       let currLen = end - start + 1;
       if (currLen < min) {
         min = currLen;
@@ -24,11 +28,11 @@ const minWindow = function (s, t) {
         count[s[start]] = (count[s[start]] || 0) + 1;
         start++;
       } else {
-        end++;
+        break;
       }
-    } else {
-      end++;
     }
+
+    end++;
   }
   return res;
 };
@@ -54,5 +58,3 @@ function uniq(str) {
   });
   return res.join('');
 }
-
-console.log(minWindow("ADOBECODEBANC", "ABC")) // "BANC"
