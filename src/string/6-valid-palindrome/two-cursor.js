@@ -6,16 +6,16 @@ const validPalindrome = function (s) {
   const isEvenLen = len % 2 === 0;
   const middleEndIndex = isEvenLen ? len / 2 - 1 : Math.floor(len / 2);
 
-  let isAleadyPalindrome = true;
+  let isAlreadyPalindrome = true;
   let i = 0;
   for (; i <= middleEndIndex; i++) {
     if (s[i] !== s[len - i - 1]) {
-      isAleadyPalindrome = false;
+      isAlreadyPalindrome = false;
       break;
     }
   }
 
-  if (isAleadyPalindrome) {
+  if (isAlreadyPalindrome) {
     return true;
   }
 
