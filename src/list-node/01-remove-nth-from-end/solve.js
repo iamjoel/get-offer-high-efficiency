@@ -1,6 +1,5 @@
-
 /*
- * 保持前后两个指针之间保持 n 个节点，同步往后移动。当后指针达到链表尾部时，前指针指向倒数第 n 个节点。
+ * 快指针和慢指针。保持前后两个指针之间保持 n 个节点，同步往后移动。当后指针达到链表尾部时，前指针指向倒数第 n 个节点。
  * 注意： 这边的head 就是一个链表。只有 next 和 value 属性。 
  */
 const removeNthFromEnd = function (head, n) {
@@ -8,15 +7,15 @@ const removeNthFromEnd = function (head, n) {
     return head;
   }
   let len = 1;
-  let beforeIndex = head;
-  let afterIndex = head;
+  let slowIndex = head;
+  let fastIndex = head;
   for (let i = 0; i < n; i++) {
-    if (!afterIndex) {
+    if (!fastIndex) {
       // 链表长度小于 n。
       return head;
     }
-    afterIndex = afterIndex.next;
-    if (afterIndex) {
+    fastIndex = fastIndex.next;
+    if (fastIndex) {
       len++;
     }
   }
@@ -24,11 +23,11 @@ const removeNthFromEnd = function (head, n) {
     // 删除头节点。
     return head.next;
   }
-  while (afterIndex && afterIndex.next) {
-    afterIndex = afterIndex.next;
-    beforeIndex = beforeIndex.next;
+  while (fastIndex && fastIndex.next) {
+    fastIndex = fastIndex.next;
+    slowIndex = slowIndex.next;
   }
 
-  beforeIndex.next = beforeIndex.next ? beforeIndex.next.next : null;
+  slowIndex.next = slowIndex.next ? slowIndex.next.next : null;
   return head;
 };
