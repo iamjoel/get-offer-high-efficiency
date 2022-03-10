@@ -43,4 +43,4 @@ const detectCycle = (head) => {
     fastIndex = fastIndex.next;
   }
   return slowIndex;
-}
+};
