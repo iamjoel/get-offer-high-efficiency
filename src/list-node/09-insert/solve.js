@@ -7,96 +7,83 @@
  */
 
 /**
-  * 遍历一圈。找max节点。
-  * 如果是从小找大的。从最小节点遍历起。否则，从最大节点遍历起。
-  * 插入大于等于最大值或小于等于最小值，都插入到最大值或最小值的中间。
-*/
-const insert = function(head, insertVal) {
-  if(!head) {
-    return new Node(insertVal);
+ * 1. 遍历一圈。找max节点。
+ * 2. 插入大于等于最大值或小于等于最小值，都插入到最大值或最小值的中间。
+ * 3. 因为是升序的，最小节从最小节点遍历起，一定能找到插入的节点。
+ */
+const insert = function (head, insertVal) {
+  const insertNode = new Node(insertVal);
+  // 空
+  if (!head) {
+    insertNode.next = insertNode;
+    return insertNode;
   }
-  if(!head.next) {
-    const insertNode = new Node(insertVal);
+  if (head.next === head) {
+    // 一个节点的情况
     insertNode.next = head;
     head.next = insertNode;
+    return head;
   }
-  // 至少有三个节点。
 
-  let max = Number.MIN_VALUE
-  let min = Number.MAX_VALUE
-  const firstNode = head
-  let beforeNode = firstNode
-  let currNode = beforeNode.next
-  let nextNode = currNode.next
-  let maxNode
-  let beforeMaxNode
+  if (head.next.next === head) {
+    // 两个节点的情况
+    if (insertVal > head.next.val || insertVal < head.val) {
+      insertNode.next = head;
+      head.next.next = insertNode;
+    } else {
+      let temp = head.next;
+      head.next = insertNode;
+      insertNode.next = temp;
+    }
+
+    return head;
+  }
+
+  let max = Number.MIN_VALUE;
+  let min = Number.MAX_VALUE;
+  const firstNode = head;
+  let beforeNode = firstNode;
+  let currNode = beforeNode.next;
+  let nextNode = currNode.next;
+  let maxNode;
+  let beforeMaxNode;
   // 转一圈
-  while(currNode !== firstNode) {
+  while (currNode.next !== firstNode.next) {
     const currMax = Math.max(currNode.val, nextNode.val);
     const currMin = Math.min(currNode.val, nextNode.val);
-    if(currMax > max) {
-      max = currMax
-      beforeMaxNode = currNode.val >= nextNode.val ? beforeNode : currNode
-      maxNode = beforeMaxNode.nextNode
+    if (currMax >= max) {
+      // 要等于存在两个最大数相同的情况。
+      max = currMax;
+      beforeMaxNode = currNode.val >= nextNode.val ? beforeNode : currNode;
+      maxNode = beforeMaxNode.next;
     }
-    if(currMin < min) {
-      min = currMin
+    if (currMin < min) {
+      min = currMin;
     }
-    beforeNode = beforeNode.next
-    currNode = currNode.next
-    nextNode = nextNode.next
+    beforeNode = beforeNode.next;
+    currNode = currNode.next;
+    nextNode = nextNode.next;
   }
 
-  // 算方向
-  let dir = 'up'
-  currNode = maxNode.next
-  nextNode = currNode.next
-  while(currNode !== maxNode) {
-    if(currNode.val === nextNode.val) {
-      continue;
-    } else {
-      dir = currNode.val > nextNode.val ? 'down' : 'up'
-      break
-    }
+  // 太多或太小，插大最大节点的后面
+  const isTooBigOrSmall = insertVal >= max || insertVal <= min;
+  if (isTooBigOrSmall) {
+    const beforeInsertNode = maxNode;
+    insertNode.next = beforeInsertNode.next;
+    beforeInsertNode.next = insertNode;
+    return head;
   }
 
-  const isTooBigOrSmall = insertVal >= max || insertVal <= min
-  if(isTooBigOrSmall) {
-    const beforeInsertNode = dir === 'up' ? maxNode : beforeMaxNode
-    const insertNode = new Node(insertVal)
-    insertNode.next = beforeInsertNode.next
-    beforeInsertNode.next = insertNode
-    return head
-  }
-
-  // 一定找得到插入的点
-  if (dir === 'down') {
-    currNode = maxNode
-    nextNode = currNode.next
-    // TODO:
-    while(nextNode !== maxNode) {
-      if(currNode.val === nextNode.val) {
-        continue;
-      } else {
-        const insertNode = new Node(insertVal)
-        insertNode.next = beforeMaxNode.next
-        beforeMaxNode.next = insertNode
-        return head
-      }
+  // 从最小节点转一圈，一定找得到插入的点
+  currNode = maxNode.next;
+  nextNode = currNode.next;
+  while (currNode.next !== maxNode.next) {
+    if (currNode.val <= insertVal && nextNode.val >= insertVal) {
+      currNode.next = insertNode;
+      insertNode.next = nextNode;
+      return head;
     }
-  } else {
-    currNode = maxNode.next
-    nextNode = currNode.next
-    // TODO:
-    while(currNode !== maxNode) {
-    }
+    currNode = currNode.next;
+    nextNode = nextNode.next;
   }
-
-
-  // 转一圈结束
-  // const insertNode = new Node(insertVal);
-  // const afterMaxValueNode = beforeMaxValueNode.next;
-  // beforeMaxValueNode.next = insertNode;
-  // insertNode.next = afterMaxValueNode;
-  return head;
 };
