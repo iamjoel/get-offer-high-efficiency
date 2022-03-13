@@ -13,20 +13,19 @@
  */
 const insert = function (head, insertVal) {
   const insertNode = new Node(insertVal);
-  // 空
+  // 没有节点的情况
   if (!head) {
     insertNode.next = insertNode;
     return insertNode;
   }
+  // 一个节点的情况
   if (head.next === head) {
-    // 一个节点的情况
     insertNode.next = head;
     head.next = insertNode;
     return head;
   }
-
+  // 两个节点的情况
   if (head.next.next === head) {
-    // 两个节点的情况
     if (insertVal > head.next.val || insertVal < head.val) {
       insertNode.next = head;
       head.next.next = insertNode;
@@ -51,8 +50,8 @@ const insert = function (head, insertVal) {
   while (currNode.next !== firstNode.next) {
     const currMax = Math.max(currNode.val, nextNode.val);
     const currMin = Math.min(currNode.val, nextNode.val);
+    // 可能会存在多个最大值相同的情况。不加等号会出问题。
     if (currMax >= max) {
-      // 要等于存在两个最大数相同的情况。
       max = currMax;
       beforeMaxNode = currNode.val >= nextNode.val ? beforeNode : currNode;
       maxNode = beforeMaxNode.next;
