@@ -64,7 +64,6 @@ function insertToTail(node, tail) {
   node.next = tail;
   prevNode.next = node;
   tail.prev = node;
-  debugger
 }
 
 function removeFromHead(head) {

@@ -1,7 +1,7 @@
 /**
  * 内部用个对象来实现
  */
- const RandomizedSet = function() {
+const RandomizedSet = function() {
   this.data = {}
   this.len = 0
 };
