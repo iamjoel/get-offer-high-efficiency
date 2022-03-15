@@ -3,11 +3,14 @@
 - 数据结构：整数、数组、字符串、链表、哈希表、栈、队列、树、堆和前缀树。
 - 算法：二分查找、排序、回溯法、动态规划和图搜索。 
 
-本文来分享下链表部分题的解法~
+本文来分享下哈希表部分题的解法~
 
 ## 哈希表介绍
+> 哈希表（Hash table，也叫散列表），是根据关键码值(Key value)而直接进行访问的数据结构。
 
+哈希表的优势是高效。哈希表的插入、删除和查找的时间复杂度都是：O（1）。因此，哈希表经常被用来优化时间效率。
 
+在 js 中，对象就是哈希表。
 
 ## 题1 - 剑指 Offer II 030. 插入、删除和随机访问都是 O(1) 的容器
 > 题目：设计一个数据结构，使如下3个操作的时间复杂度都是O（1）。
@@ -17,7 +20,7 @@
 
 [题的力扣地址](https://leetcode-cn.com/problems/FortPu/)
 
-js中对象的插入、删除和随机访问的时间复杂度都是 O(1) 。因此，容器内部有一个来对象来处理插入、删除和随机访问即可。代码如下：
+js中，对象的插入、删除和随机访问的时间复杂度都是 O(1) 。因此，容器内部用一个来对象来处理插入、删除和随机访问即可。代码如下：
 
 ```js
 const RandomizedSet = function() {
@@ -57,13 +60,16 @@ RandomizedSet.prototype.getRandom = function() {
 
 [题的力扣地址](https://leetcode-cn.com/problems/OrIXps/)
 
-容易想到的是：用对象来存数据，再用一对象来存键的访问次数。但这么做，获取键的访问次数的时间复杂度超过了O(1)。
+容易想到的是：用对象来存数据，用另一个对象来存键的访问次数。但这么做，在缓存容量已满，要删除最近最少使用的键时，需要遍历存键值数量的对象，找的最小值。该操作的时间复杂度是O(n)，超过了要求：O(1)。
 
-双向链表插入和删除节点的时间复杂度是O（1），对象的查询复杂度是 O（1）。因此，结合这两种数据结构的特性，可以设计出满足时间复杂度的算法。具体步骤如下：
+双向链表插入和删除节点的时间复杂度是O（1），对象的查询复杂度是 O（1）。因此，结合这两种数据结构的特点，可以设计出满足时间复杂度的算法。具体步骤如下：
 1. 用一个双向链表来存数据，用一个对象来存每个key在双向链表中位置。
-2. 执行get操作时。如果该key对应的节点存在，将该key对应的链表节点移动到链表的尾部。因此，长时间没用的链表节点，会在链表头部。
+2. 执行get操作时。如果该 key 对应的节点存在，将该key对应的链表节点移动到链表的尾部。因此，长时间没用的链表节点，会在链表头部。
 3. 执行put操作时，如果缓存容量已经满了。删除链表头部的节点。
 4. 执行put操作时，如果 key 不存在，则创建链表节点，丢到链表最后。否则，改对应链表节点的值。
+
+如下图所示：
+![](./images/hasmap-link-node.png)
 
 双向链表的定义：
 ```js
@@ -85,7 +91,6 @@ function insertToTail(node, tail) {
   node.next = tail;
   prevNode.next = node;
   tail.prev = node;
-  debugger
 }
 ```
 
@@ -158,7 +163,7 @@ LRUCache.prototype.put = function (key, value) {
 
 [题的力扣地址](https://leetcode-cn.com/problems/dKk3P7/)
 
-变未词的特点是，字符及每个字符出现的次数都相同。因此可以用对象来存单词中各个字母出现的次数。比较该对象的内容是否相同，即可判断两个单词是否是变位词。代码如下：
+变位词的特点是：单词中每个字符出现的次数都相同。因此可以用对象来存单词中各个字母出现的次数。比较该对象的内容是否相同，即可判断两个单词是否是变位词。代码如下：
 ```js
 const isAnagram = function (s, t) {
   if (s === t || s.length !== t.length) {
@@ -186,21 +191,23 @@ function getAlphaCount(s) {
 }
 ```
 
-但这算法的时间复杂度高。优化的方式是，
+还有一种算法：将单词中的字母按照字母的 ascii 码排序。变位词排序后的字符串是相同的。单词排序算法如下：
+```js
+function sortWord(word) {
+  const arr = word.split('');
+  arr.sort((a, b) => a.charCodeAt() - b.charCodeAt());
+  return arr.join('');
+}
+```
 
-质数。
+还有一种算法。质数不能分解成除自身和1之外的其他整数。利用这个特性，用不同的质数来表示不同的字母。将单词中所有字母对应的质数相乘。变位词的乘积相同。需要注意的是，如果单词很长的话，乘积会有溢出的风险。
 
 ## 题4 - 剑指 Offer II 033. 变位词组
 > 题目：给定一组单词，请将它们按照变位词分组。例如，输入一组单词["eat"，"tea"，"tan"，"ate"，"nat"，"bat"]，这组单词可以分成3组，分别是["eat"，"tea"，"ate"]、["tan"，"nat"]和["bat"]。假设单词中只包含英文小写字母。
 
 [题的力扣地址](https://leetcode-cn.com/problems/sfvd7V/)
 
-可以用上题中的算法，来判断是否两个词是否是变位词。
-
-
-下面就是做过分组。
-
-代码如下：
+可以用上题中的算法，来判断是否两个词是否是变位词。然后将变位词做个分组即可。代码如下：
 ```js
 const groupAnagrams = function (strs) {
   const group = {};
@@ -229,8 +236,51 @@ function sortWord(word) {
 
 [题的力扣地址](https://leetcode-cn.com/problems/lwyVBB/)
 
+排序需要比较大小，但字母没法比较大小。将字母转化成数字后就可以比较大小了。具体算法如下：
+1. 用不同的数字来表示字母，根据字母表的顺序，顺序越靠后，数字越大。
+2. 用对象来存所有字母对应的数字值。
+3. 比较两个单词是否是排序，只需从头开始依次比较字母的数字值即可。
+4. 从头开始，比较所有相邻的两个单词，如果都是排序的，则结果是排序的。
+
 代码如下：
 ```js
+const isAlienSorted = function (words, order) {
+  const orderMap = getOrderMap(order);
+  let i = 0;
+  while (i < words.length - 1) {
+    if (!compare(words[i], words[i + 1], orderMap)) {
+      return false;
+    }
+    i++;
+  }
+  return true;
+};
+
+function getOrderMap(order) {
+  const orderMap = {};
+  order.split('').forEach((c, index) => {
+    orderMap[c] = index + 1;
+  });
+  return orderMap;
+}
+
+function compare(w1, w2, orderMap) {
+  let i = 0;
+  while (i < w1.length && i < w2.length) {
+    if (orderMap[w1[i]] > orderMap[w2[i]]) {
+      return false;
+    }
+    if (orderMap[w1[i]] < orderMap[w2[i]]) {
+      return true;
+    }
+    i++;
+  }
+  // 前面都相同，但 w1 更长。
+  if(w1.length > w2.length) {
+    return false;
+  }
+  return true;
+}
 ```
 
 ## 题6 - 剑指 Offer II 035. 最小时间差
@@ -238,12 +288,32 @@ function sortWord(word) {
 
 [题的力扣地址](https://leetcode-cn.com/problems/569nqc/)
 
+将时间转化成分钟，然后从小到大排序后，比较相邻两个数字的差值，取最小值即可。注意：不要漏 `比较最小值 + 24小时` 和 最大值做比较，比如： `["00: 00", "23：49", "23：59"]` 的最小时间差不是 10 分钟(`23：59 - 23：49`)，而是 1 分钟(`00: 00 + 24:00 - 23：59`)。
+
 代码如下：
 ```js
+const ONE_DAY_MINUTE = 24 * 60
+const findMinDifference = function(timePoints) {
+  if(timePoints.length <= 1) {
+    return 0;
+  }
+  const minutes = timePoints.map(time => toMinute(time));
+  minutes.sort((a, b) => a - b);
+  const diff = minutes.map((m, i) => {
+    if(i === 0) { // 最后一个和第一个的差值。
+      return m + ONE_DAY_MINUTE - minutes[minutes.length - 1];
+    }
+    return m - minutes[i - 1];
+  })
+  const min = Math.min(...diff);
+  return min;
+};
+
+function toMinute(time) {
+  const [hour, minute] = time.split(':').map(Number);
+  return hour * 60 + minute;
+}
 ```
-
-## 总结
-
 
 ## 相关阅读
 * [《剑指Offer：专项突破版》 - 链表部分 JavaScript 题解](https://mp.weixin.qq.com/s/IOA1cOa38c4DHcANcQgSKA)
