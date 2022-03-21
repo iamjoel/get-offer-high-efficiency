@@ -25,14 +25,12 @@ const asteroidCollision = function (asteroids) {
     // 碰撞
     let isBig = false;
     while (stack.length > 0) {
-      // debugger
       const last = stack[stack.length - 1];
       // 不碰撞
       if(!(last > 0 && curr < 0)) {
         stack.push(curr);
         break;
       }
-      // last > 0 && curr < 0
       if (last > -curr) {
         isBig = false;
         break;

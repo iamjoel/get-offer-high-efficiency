@@ -1,4 +1,4 @@
-// 存当前没找到最大值的温度下标。在没找到的数组头部找，把找到的所有大于的值都出栈，直到栈空或小于。当前值如栈。
+// 存当前没找到最更高值的温度下标。在没找到的数组头部找，把找到的所有大于的值都出栈，直到栈空或小于。当前值如栈。
 const dailyTemperatures = function (temperatures) {
   if (!temperatures || !temperatures.length) return [];
   let res = temperatures.map(() => 0);
