@@ -6,7 +6,7 @@
 本文来分享下队列部分题的解法~
 
 ## 队列介绍
-> 队列是操作受限的数组。只能在数组的尾部插入元素，在数组的头部删除元素。它的特点是“前入先出”：先入队列的元素先出来。
+> 队列是操作受限的数组。只能在数组的尾部插入元素，在数组的头部删除元素。它的特点是“先入先出”：先入队列的元素先出来。
 
 基于 js 的数组，很容易实现队列：
 ```js
@@ -15,11 +15,12 @@ class Queue {
     this.list = [];
     this.size = 0;
   }
+  // 入队
   enqueue(item) {
     this.size++;
     this.list.push(item);
   }
-
+  // 出队
   dequeue() {
     this.size--;
     return this.list.shift();
@@ -32,7 +33,7 @@ class Queue {
 
 [题的力扣地址](https://leetcode-cn.com/problems/qIsx9U/)
 
-可以用队列来存滑动窗口的数据。添加整数时入队，超过窗口大小时出队。为了降低求平均值的时间复杂度，缓存窗口数字的和。入队，出队时，`当前的和 = 之前的和 + 入队的数 - 出队的数`。代码如下：
+可以用队列来存滑动窗口的数据。添加整数时入队，超过窗口大小时出队。为了降低求平均值的时间复杂度，要缓存窗口数字的和。调用成员函数next时，`当前的和 = 缓存的和 + 入队的数字 - 出队的数字`。`平均值 = 当前的和 / 数字数量`。代码如下：
 
 ```js
 const MovingAverage = function (size) {
@@ -57,9 +58,9 @@ MovingAverage.prototype.next = function (val) {
 
 [题的力扣地址](https://leetcode-cn.com/problems/H8086Q/)
 
-用队列来存之前的请求时间。当添加新的请求时，
-* 将当前请求时间和队列中的请求时间比较，将超出时间范围的出队。
-* 将当前请求时间入队。
+用队列来存之前的请求时间。当添加新的请求时:
+1. 将新的请求时间和队列中的请求时间比较，超出时间范围的时间的出队。
+2. 将新的请求时间入队。
 
 代码如下：
 
@@ -96,9 +97,19 @@ RecentCounter.prototype.dequeue = function () {
 
 [题的力扣地址](https://leetcode-cn.com/problems/NaqhDT/)
 
-可以用队列来存可以添加子节点的节点。同时，用队列也可以实现树的广度优先的遍历。
+可以用队列来存可以添加子节点的节点(左节点或右节点是空的)。添加节点时：
+1. 将新节点添加在队列的第一个节点上。
+2. 添加后，若该节已满(左右节点都有元素)。该节点出列，节点的左右节点入列。
 
-树的数据结构如下：
+查找可以添加子节点的节点要遍历树。存在多种遍历树节点的顺序。结合本题的情况，适合用广度优先来遍历树。
+> 广度优先遍历指按顺序访问一层的每个节点，访问完后，再访问下一个层。
+
+用队列很容易实现树的广度优先遍历。算法为：
+1. 将树的根节点入列。
+2. 出列。访问出列的节点。将节点的子节点入列。
+3. 重复上一步，直到队列为空。
+
+二叉树的数据结构如下：
 ```js
 function TreeNode(val, left, right) {
   this.val = (val===undefined ? 0 : val)
@@ -108,7 +119,6 @@ function TreeNode(val, left, right) {
 ```
 
 完整代码如下：
-
 ```js
 const CBTInserter = function (root) {
   this.root = root;
@@ -155,9 +165,60 @@ CBTInserter.prototype.dequeue = function () {
 
 [题的力扣地址](https://leetcode-cn.com/problems/hPov7L/)
 
-代码如下：
+题目要求找树每层的最大值。树的广度优先遍历正好是按层的顺序来的。因此，只要在遍历每层节点的过程中，找出最大值即可。
+
+可以用队列实现广度优先遍历树。要知道当前节点在哪一层，可以通过在节点入队时，传入层的信息。代码如下：
 
 ```js
+const node = curr.node;
+const level = curr.level;
+if (node.left) {
+  list.push({
+    node: node.left,
+    level: level + 1,
+  });
+}
+if (node.right) {
+  list.push({
+    node: node.right,
+    level: level + 1,
+  });
+}
+```
+
+完整代码如下：
+
+```js
+const largestValues = function (root) {
+  if(!root) return [];
+  const list = [
+    {
+      node: root,
+      level: 1,
+    },
+  ];
+  const maxValueArr = [];
+  let curr;
+  while (list.length > 0) {
+    curr = list.shift();
+    const node = curr.node;
+    const level = curr.level;
+    maxValueArr[level - 1] = Math.max(maxValueArr[level - 1] === undefined ? Number.NEGATIVE_INFINITY : maxValueArr[level - 1], node.val);
+    if (node.left) {
+      list.push({
+        node: node.left,
+        level: level + 1,
+      });
+    }
+    if (node.right) {
+      list.push({
+        node: node.right,
+        level: level + 1,
+      });
+    }
+  }
+  return maxValueArr;
+};
 ```
 
 ## 题5 - 剑指 Offer II 045. 二叉树最底层最左边的值
@@ -165,9 +226,49 @@ CBTInserter.prototype.dequeue = function () {
 
 [题的力扣地址](https://leetcode-cn.com/problems/LwUNpT/)
 
-代码如下：
+本题和上题类似，用队列实现树的广度优先遍历。存每层最左边的节点值，最后取最后一层的。代码如下：
 
 ```js
+const findBottomLeftValue = function (root) {
+  if (!root) return null;
+  if (!root.left && !root.right) return root.val;
+  const levelLeftValue = [];
+  const list = [
+    {
+      node: root,
+      level: 1,
+      isLeft: true,
+    },
+  ];
+  let curr;
+  while (list.length > 0) {
+    curr = list.shift();
+    const node = curr.node;
+    const level = curr.level;
+    if (levelLeftValue[level - 1] === undefined) {
+      levelLeftValue[level - 1] = node.val;
+    }
+
+    if (node.left) {
+      list.push({
+        node: node.left,
+        level: level + 1,
+      });
+    }
+    if (node.right) {
+      list.push({
+        node: node.right,
+        level: level + 1,
+      });
+    }
+  }
+
+  // 取最后一个
+  const res = levelLeftValue
+    .filter((item) => item !== undefined)
+    .slice(-1)[0];
+  return res;
+};
 ```
 
 ## 题6 - 剑指 Offer II 046. 二叉树的右侧视图
@@ -177,12 +278,52 @@ CBTInserter.prototype.dequeue = function () {
 
 [题的力扣地址](https://leetcode-cn.com/problems/WNC0Lk/)
 
-代码如下：
+本题和上题类似，用队列实现树的广度优先遍历。存每层最右边的节点。代码如下：
 
 ```js
+const rightSideView = function(root) {
+  if (!root) return [];
+  if (!root.left && !root.right) return [root.val];
+  const levelRightValue = [];
+  const list = [
+    {
+      node: root,
+      level: 1,
+      isLeft: true,
+    },
+  ];
+  let curr;
+  while (list.length > 0) {
+    curr = list.shift();
+    const node = curr.node;
+    const level = curr.level;
+    levelRightValue[level - 1] = node.val;
+
+    if (node.left) {
+      list.push({
+        node: node.left,
+        level: level + 1,
+      });
+    }
+    if (node.right) {
+      list.push({
+        node: node.right,
+        level: level + 1,
+      });
+    }
+  }
+
+  return levelRightValue;
+};
 ```
 
+## 总结
+可以用队列实现树的广度优先遍历。在遍历时，获取第几层之类的信息，可以通过节点入队时传入。
+
+当然，根据队列 “先入先出” 的特点，队列还会被用在接口的并发控制等场景。
+
 ## 相关阅读
+* [《剑指Offer：专项突破版》 - 栈部分 JavaScript 题解](https://mp.weixin.qq.com/s/u7RDsgQzh19UkH02AotPfQ)
 * [《剑指Offer：专项突破版》 - 哈希表部分 JavaScript 题解](https://mp.weixin.qq.com/s/o57JvPCih3YT2cOxvPTSvw)
 * [《剑指Offer：专项突破版》 - 链表部分 JavaScript 题解](https://mp.weixin.qq.com/s/IOA1cOa38c4DHcANcQgSKA)
 * [《剑指Offer：专项突破版》 - 数组部分 JavaScript 题解](https://mp.weixin.qq.com/s/gU9gDo60IWbuBmoeX4a3gA)
