@@ -6,16 +6,50 @@
 本文来分享下队列部分题的解法~
 
 ## 队列介绍
+> 队列是操作受限的数组。只能在数组的尾部插入元素，在数组的头部删除元素。它的特点是“前入先出”：先入队列的元素先出来。
 
+基于 js 的数组，很容易实现队列：
+```js
+class Queue {
+  constructor() {
+    this.list = [];
+    this.size = 0;
+  }
+  enqueue(item) {
+    this.size++;
+    this.list.push(item);
+  }
+
+  dequeue() {
+    this.size--;
+    return this.list.shift();
+  }
+}
+```
 
 ## 题1 - 剑指 Offer II 041. 滑动窗口的平均值
 > 题目：请实现如下类型MovingAverage，计算滑动窗口中所有数字的平均值，该类型构造函数的参数确定滑动窗口的大小，每次调用成员函数next时都会在滑动窗口中添加一个整数，并返回滑动窗口中所有数字的平均值。
 
 [题的力扣地址](https://leetcode-cn.com/problems/qIsx9U/)
 
-代码如下：
+可以用队列来存滑动窗口的数据。添加整数时入队，超过窗口大小时出队。为了降低求平均值的时间复杂度，缓存窗口数字的和。入队，出队时，`当前的和 = 之前的和 + 入队的数 - 出队的数`。代码如下：
 
 ```js
+const MovingAverage = function (size) {
+  this.queue = new Queue();
+  this.size = size;
+  this.sum = 0;
+};
+
+MovingAverage.prototype.next = function (val) {
+  if (this.queue.size === this.size) {
+    this.sum -= this.queue.dequeue();
+  }
+  this.sum += val;
+  this.queue.enqueue(val);
+  const average = this.sum / this.queue.size;
+  return average;
+};
 ```
 
 ## 题2 - 剑指 Offer II 042. 最近请求次数
@@ -23,9 +57,33 @@
 
 [题的力扣地址](https://leetcode-cn.com/problems/H8086Q/)
 
+用队列来存之前的请求时间。当添加新的请求时，
+* 将当前请求时间和队列中的请求时间比较，将超出时间范围的出队。
+* 将当前请求时间入队。
+
 代码如下：
 
 ```js
+const PERIOD = 3000;
+const RecentCounter = function () {
+  this.list = [];
+};
+
+RecentCounter.prototype.ping = function (t) {
+  while (t - this.list[0] > PERIOD) {
+    this.dequeue();
+  }
+  this.enqueue(t);
+  return this.list.length;
+};
+
+RecentCounter.prototype.enqueue = function (t) {
+  this.list.push(t);
+};
+
+RecentCounter.prototype.dequeue = function () {
+  return this.list.shift();
+};
 ```
 
 ## 题3 - 剑指 Offer II 043. 往完全二叉树添加节点
@@ -38,9 +96,56 @@
 
 [题的力扣地址](https://leetcode-cn.com/problems/NaqhDT/)
 
-代码如下：
+可以用队列来存可以添加子节点的节点。同时，用队列也可以实现树的广度优先的遍历。
+
+树的数据结构如下：
+```js
+function TreeNode(val, left, right) {
+  this.val = (val===undefined ? 0 : val)
+  this.left = (left===undefined ? null : left)
+  this.right = (right===undefined ? null : right)
+}
+```
+
+完整代码如下：
 
 ```js
+const CBTInserter = function (root) {
+  this.root = root;
+  this.list = [root];
+  let curr;
+  while (this.list[0].left !== null && this.list[0].right !== null) {
+    curr = this.dequeue();
+    this.enqueue(curr.left);
+    this.enqueue(curr.right);
+  }
+};
+
+CBTInserter.prototype.insert = function (v) {
+  const parentNode = this.list[0];
+  const node = new TreeNode(v);
+  if (parentNode.left === null) {
+    parentNode.left = node;
+  } else {
+    parentNode.right = node;
+    this.dequeue();
+    this.enqueue(parentNode.left);
+    this.enqueue(parentNode.right);
+  }
+  return parentNode.val;
+};
+
+CBTInserter.prototype.get_root = function () {
+  return this.root;
+};
+
+CBTInserter.prototype.enqueue = function (t) {
+  this.list.push(t);
+};
+
+CBTInserter.prototype.dequeue = function () {
+  return this.list.shift();
+};
 ```
 
 ## 题4 - 剑指 Offer II 044. 二叉树每层的最大值
