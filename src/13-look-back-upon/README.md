@@ -9,11 +9,33 @@
 
 ## 题1 - 剑指 Offer II 079. 所有子集
 
-[题的力扣地址](https://leetcode-cn.com/problems/TVdhkn/)
+[题的力扣地址](https://leetcode-cn.com/problems/TVdhkn/)。
+
+每步都是：不选当前元素或选择当前元素。直到最后一步，则完全结束。
 
 代码如下：
 
 ```js
+const subsets = function(nums) {
+    if(nums.length === 0) {
+        return [[]]
+    }
+    const res = []
+    gen(nums, 0, [], res)
+    return res
+};
+
+const gen = function(nums, index, prevRes, res) {
+    if(index === nums.length) {
+        res.push(prevRes)
+        return
+    }
+    // 不选当前元素
+    gen(nums, index + 1, [...prevRes], res)
+    // 选择当前元素
+    prevRes.push(nums[index])
+    gen(nums, index + 1, [...prevRes], res)
+}
 ```
 
 ## 题2 - 剑指 Offer II 080. 含有 k 个元素的组合
