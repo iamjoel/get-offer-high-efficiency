@@ -11,7 +11,7 @@
 
 [题的力扣地址](https://leetcode-cn.com/problems/TVdhkn/)。
 
-每步都是：不选当前元素或选择当前元素。直到最后一步，则完全结束。
+每步都是：不选当前元素或选择当前元素。直到遍历完整个数组。
 
 代码如下：
 
@@ -42,9 +42,35 @@ const gen = function(nums, index, prevRes, res) {
 
 [题的力扣地址](https://leetcode-cn.com/problems/uUsW3B/)
 
+和上题思路类似。不选当前元素或选择当前元素，直到遍历完整个数组或到达数组的组合。
+
 代码如下：
 
 ```js
+const combine = function(n, k) {
+    const nums = []
+    for(let i = 1; i <= n; i++) {
+        nums.push(i)
+    }
+    const res = []
+    gen(nums, k, 0, [], res)
+    return res
+};
+
+const gen = function(nums, k, index, prevRes, res) {
+    if (index === nums.length) {
+        return
+    }
+    if(k === prevRes.length) {
+        res.push(prevRes)
+        return
+    }
+    // 不选当前元素
+    gen(nums, k, index + 1, [...prevRes], res)
+    // 选择当前元素
+    prevRes.push(nums[index])
+    gen(nums, k, index + 1, [...prevRes], res)
+}
 ```
 
 ## 题3 - 剑指 Offer II 081. 允许重复选择元素的组合
