@@ -5,8 +5,11 @@
 
 最近，把整数部分的题刷完了。本文来分享下这些题的解法~
 
+[导图](./mind/num.mindnode)
+
 ## 题1 - [整数除法](https://leetcode-cn.com/problems/xoh6Oh/)
-> 给定两个整数 a 和 b ，求它们的除法的商 a/b ，要求不得使用乘号 '\*'、除号 '/' 以及求余符号 '%' 。
+> 给定两个整数 a 和 b ，求它们的除法的商 a/b ，要求不得使用乘号 '\*'、除号 '/' 以及求余符号 '%'。
+
 ### 题解
 最容易想到的算法是用减法来模拟除法。被除数减除数，直到被除数小于除数为止。核心代码如下：
 ```js
@@ -238,13 +241,3 @@ function getSum(word, lettersValue) {
   return word.split('').reduce((prev, curr) => prev + lettersValue[curr], 0);
 }
 ```
-
-## 最后
-所有代码在：[这里](https://github.com/iamjoel/get-offer-high-efficiency/tree/master)。
-
-最近建了个免费的知识星球，目的有两个：
-1. 用来沉淀和分享有价值的前端信息。
-2. 做群活动的管理。目前正在进行中的主题读书会：《高效阅读技术书籍》。用知识星球来做每日的心得分享和打卡。
-
-感兴趣的，扫码加入：
-![](images/knowledge-cicle.jpeg)
